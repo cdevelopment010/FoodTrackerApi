@@ -13,8 +13,8 @@ public class LogSummaryService : ILogSummaryService
             .Select(group => new LogSummary
             {
                 Date = group.Key, 
-                Good = group.Count(e => e.Status.ToLower() == "good"),
-                Bad = group.Count(e => e.Status.ToLower() == "bad")
+                Good = group.Count(e => e.Status == FoodStatus.Good),
+                Bad = group.Count(e => e.Status == FoodStatus.Bad)
             })
             .OrderBy(s => s.Date)
             .ToList();

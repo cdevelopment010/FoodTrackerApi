@@ -18,6 +18,13 @@ app.MapPost("/log", (LogEntry entry) =>
     {
         entry.Date = DateTime.Now;
     }
+
+    if (!Enum.IsDefined(typeof(FoodStatus), entry.Status))
+    {
+        return Results.BadRequest("Invalid status value.");
+    }
+
+
     foodLog.Add(entry);
 
     return Results.Ok("Logged");
