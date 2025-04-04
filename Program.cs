@@ -1,6 +1,6 @@
 using FoodTrackerApi.Models;
 using FoodTrackerApi.Services;
-using Microsoft.VisualBasic;
+using FoodTrackerApi.Utils;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -51,10 +51,7 @@ app.MapGet("/log/summary/{year:int}/{week:int}", (int year, int week, ILogSummar
 
 app.MapGet("/log/summary/{weeks:int?}", (int? weeks, ILogSummaryService summaryService) => {
     
-    var actualWeeks = weeks.GetValueOrDefault(1);
-    if (actualWeeks < 1 ) { actualWeeks = 1; }
-    var start = DateTime.Today.AddDays(-7 * actualWeeks + 1);  
-    var end = DateTime.Today;
+    var (start, end) = SummaryUtils.GetDateRangeFromWeeks(weeks);
 
     var summary = summaryService.GetSummary(foodLog, start, end); 
     return Results.Json(summary); 
