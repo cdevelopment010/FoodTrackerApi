@@ -17,5 +17,6 @@ public enum FoodStatus
 {
     Good  = 0, 
     Bad  = 1, 
-    Neutral = 2
+    Neutral = 2,
+    Hypo = 3,
 }   
