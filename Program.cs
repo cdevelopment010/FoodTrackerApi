@@ -6,13 +6,14 @@ using FoodTrackerApi.Utils;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<ILogSummaryService, LogSummaryService>(); 
+builder.Services.AddScoped<ILogStorageService, JsonLogStorageService>();
 
 var app = builder.Build();
 
 var foodLog = new List<LogEntry>(); 
 app.MapGet("/", () => "Food Tracker API is live!");
 
-app.MapPost("/log", (LogEntry entry) => 
+app.MapPost("/log", async (LogEntry entry, ILogStorageService storage) => 
 {
     if (entry.Date == null) 
     {
@@ -24,16 +25,26 @@ app.MapPost("/log", (LogEntry entry) =>
         return Results.BadRequest("Invalid status value.");
     }
 
-
-    foodLog.Add(entry);
-
+    await storage.AddEntryAsync(entry);
     return Results.Ok("Logged");
 });
-
-app.MapGet("/log/week", () => 
+app.MapGet("/log", async (ILogStorageService storage) => 
 {
-    var start = DateTime.Today.AddDays(-6); 
-    var week = foodLog 
+    var start = DateTime.Today;
+    var data = await storage.LoadAllAsync(); 
+    var today = data    
+        .Where(e => e.Date?.Date >= start)
+        .OrderBy(e => e.Date)
+        .ToList(); 
+
+    return Results.Json(today);
+});
+
+app.MapGet("/log/week", async (ILogStorageService storage) => 
+{
+    var start = DateTime.Today.AddDays(-6);
+    var data = await  storage.LoadAllAsync(); 
+    var week = data 
         .Where(e => e.Date?.Date >= start)
         .OrderBy(e => e.Date)
         .ToList(); 
