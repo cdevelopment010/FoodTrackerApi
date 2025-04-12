@@ -4,10 +4,10 @@ namespace FoodTrackerApi.Models;
 
 public class LogEntry 
 {
+    public int Id { get; set; } = -1;
     public DateTime? Date { get; set; }
     [EnumDataType(typeof(FoodStatus))]
     public FoodStatus Status { get; set; } = FoodStatus.Good;
-
     public int UserId { get; set; } = -1;
     public string? Meal {get; set; }
     public string? Notes { get; set; }

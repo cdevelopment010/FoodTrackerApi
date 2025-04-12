@@ -8,6 +8,6 @@ public interface ILogStorageService
     Task AddEntryAsync(LogEntry entry); 
     Task SaveAllAsync(List<LogEntry> entries);
 
-    Task DeleteEntryAsync(DateTime timestamp); 
+    Task DeleteEntryAsync(int id); 
     Task ClearAllAsync(); 
 }

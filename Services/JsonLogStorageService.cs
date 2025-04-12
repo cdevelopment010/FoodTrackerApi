@@ -22,6 +22,8 @@ public class JsonLogStorageService : ILogStorageService
     public async Task AddEntryAsync(LogEntry entry) 
     {
          var logs = await LoadAllAsync(); 
+         var nextId = logs.Any() ? logs.Max(e => e.Id) + 1 : 1; 
+         entry.Id = nextId;
          logs.Add(entry); 
          await SaveAllAsync(logs);
     }
@@ -32,10 +34,10 @@ public class JsonLogStorageService : ILogStorageService
         await File.WriteAllTextAsync(_filePath, json);
     }
 
-    public async Task DeleteEntryAsync(DateTime timestamp)
+    public async Task DeleteEntryAsync(int id)
     {
         var logs = await LoadAllAsync(); 
-        var updated = logs.Where(e => e.Date != timestamp).ToList();
+        var updated = logs.Where(e => e.Id != id).ToList();
         await SaveAllAsync(updated);
     }
 
