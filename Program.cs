@@ -68,6 +68,11 @@ app.MapGet("/log/summary/{weeks:int?}", (int? weeks, ILogSummaryService summaryS
     return Results.Json(summary); 
 });
 
+app.MapDelete("/log/{id:int}", async (int id, ILogStorageService storage) => {
+    await storage.DeleteEntryAsync(id); 
+    Results.Ok($"Deleted log with ID {id}");
+});
+
 
 DateTime FirstDateOfWeek(int year, int weekOfYear)
 {
